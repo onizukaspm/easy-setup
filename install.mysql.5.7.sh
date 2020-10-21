@@ -35,10 +35,10 @@ else
 fi
 
 MYSQL_VERSION="mysql-5.7.30"
-MYSQL_PORT=7706
+MYSQL_PORT=3306
 # 密码不可包含$符号，否则可能创建login-path失败
-MYSQL_USER="pick"
-MYSQL_PASSWORD="sd-9898w"
+MYSQL_USER="youruser"
+MYSQL_PASSWORD="yourpassword"
 MYSQL_DIR="/data/mysql"
 LOG_DIR="/data/mysql"
 MYSQL_SERVICE="mysqld"
@@ -150,6 +150,7 @@ enforce_gtid_consistency        = ON
 #sql_mode                        = ERROR_FOR_DIVISION_BY_ZERO,NO_ZERO_DATE,NO_ZERO_IN_DATE,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES
 tmpdir                          = /tmp
 user                            = mysql
+secure-file-priv                = ${LOG_DIR}/dumplog
 
 # InnoDB Settings
 default_storage_engine          = InnoDB

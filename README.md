@@ -1,2 +1,46 @@
 # easy-setup
 Installation and configuration of various software on CentOS/RHEL via a shell.
+
+- install.JDK.sh
+  - install latest `JDK 8` to `/data/JDK_8`
+- install.jemalloc.sh
+  - install `jemalloc 5.2.1`
+- install.mysql.5.7.sh
+  - install `mysql-5.7.30` to `/data/mysql`
+  - installation depend on `jemalloc`
+  - some setting (eg user, password) should be changed before execution
+  - installation will auto create user with password, create login-path, create service/systemd
+  - configuration have been optimized
+- install.nginx.sh
+  - install `nginx-1.18.0` to `/data/nginx`
+  - installation depend on `jemalloc`
+  - installation will create service/systemd
+  - include module `http_ssl`, `http_v2`, `http_realip`, `http_addition`, `http_gzip_static`, http_sub, `pcre`, `steam`, `jemalloc`, `openssl`, `brotli`, `nginx_ct`, `ngx_pagespeed`
+  - configuration have been optimized
+    - auto include `*.conf`  files in `/data/nginx/conf/sites-enable`
+- install.sysbench.sh
+  - install latest `sysbench` to `/data/tools/sysbench`
+- install.wrk.sh
+  - install latest `wrk` to `/data/tools/wrk`
+- optimize.high-performance.4.9.higher.sh
+  - optimize kernel >= 4.9
+- optimize.high-performance.4.9.lower.sh
+  - optimize kernel < 4.9
+- optimize.system.db.sh
+  - optimize kernel for MySQL
+- tools/check_git_status.sh
+  - check all git repository status in specify directory
+  - change variable `root_path` in script before execution
+- tools/letsencrypt
+  - dns.apis.sh 
+    - configuration for `refresh.ssl.sh`
+    - add `API_KEYS` & `API_SECRETS` for certification domains
+  - refresh.ssl.sh
+    - check if domain SSL certification, which is created by acme.sh, expired
+    - renew SSL certification if it will be expired in 86400 seconds
+    - all certification files should in `SSL_PATH="/data/nginx/ssl"`, whose file name like "[domain].fullchain.cer" (eg. example.com.fullchain.cer), `[domain]` should be contained by  `API_KEYS` & `API_SECRETS`  in `dns.apis.sh` 
+- tools/proxy.sh
+  - how to set/start/stop proxy in Linux
+- tools/ctail
+  - colorful `tail` base on `awk`
+
