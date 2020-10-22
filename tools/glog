@@ -1,0 +1,85 @@
+#!/bin/bash
+# check and refresh let's encrypt SSL
+set -o errexit -o pipefail -o noclobber -o nounset
+#set -o verbose
+
+# echo colors
+# shellcheck disable=SC2034
+C_NONE="\033[0m"
+# shellcheck disable=SC2034
+C_BRED="\033[1;31m"
+# shellcheck disable=SC2034
+C_BGREEN="\033[1;32m"
+# shellcheck disable=SC2034
+C_BYELLOW="\033[1;33m"
+# shellcheck disable=SC2034
+C_BBLUE="\033[1;34m"
+# shellcheck disable=SC2034
+PADDING="        " # length=8
+
+LOG() {
+  echo -e "$(date +"[%F %T.%N]") ${*}"
+}
+
+exists_command() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+usage(){
+    LOG "${C_BBLUE}Usage${C_NONE}: $0 -n <log lines>"
+    #LOG "    [Mandatory]"
+    LOG "    [Optional]"
+    LOG "    -n|--number  number of shown logs"
+    LOG "    -h|--help    show usage"
+}
+
+if ! exists_command git; then
+  LOG "${C_BRED}git not exists! abort checking.${C_NONE}"
+  exit 0
+fi
+
+! getopt --test > /dev/null
+enhanced=${PIPESTATUS[0]}
+if [[ ${enhanced} -ne 4 ]]; then
+    LOG "${C_BRED}'getopt --test' return ${enhanced}, no enhanced getopt in this environment.${C_NONE}"
+    exit 1
+fi
+
+# check parameters
+OPTIONS="n:h:"
+LONG_OPTS="number:,help"
+
+! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONG_OPTS --name "$0" -- "$@")
+if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
+    # then getopt has complained about wrong arguments to stdout
+    exit 2
+fi
+eval set -- "$PARSED"
+
+LOG_LINES=""
+while true; do
+    case "$1" in
+        -n|--number)
+            LOG_LINES="$2"
+            shift 2
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            LOG "${C_BRED}unsupported arguments: $1${C_NONE}"
+            exit 3
+            ;;
+    esac
+done
+
+if [ x"${LOG_LINES}" != x"" ]; then
+        git log -"${LOG_LINES}" --graph --pretty="format:%Cblue%h%Creset %C(bold blue)%>(8)%cn%Creset %Cgreen%ct%Creset %<(140,trunc)%s"
+else
+        git log --graph --pretty="format:%Cblue%h%Creset %C(bold blue)%>(8)%cn%Creset %Cgreen%ct%Creset %<(140,trunc)%s"
+fi

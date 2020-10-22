@@ -43,4 +43,6 @@ Installation and configuration of various software on CentOS/RHEL via a shell.
   - how to set/start/stop proxy in Linux
 - tools/ctail
   - colorful `tail` base on `awk`
+- tools/glog
+  - pretty git log
 
